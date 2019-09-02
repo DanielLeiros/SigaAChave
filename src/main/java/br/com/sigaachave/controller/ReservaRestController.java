@@ -43,7 +43,7 @@ public class ReservaRestController {
 		return new ResponseEntity<Reserva>(reservaRepository.getOne(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/reservas/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/reservas/{id}/excluir", method = RequestMethod.DELETE)
 	public ResponseEntity<Reserva> remove(@PathVariable("id") Long id) {
 		
 		if(reservaRepository.existsById(id) == false) {
@@ -55,7 +55,7 @@ public class ReservaRestController {
 		return new ResponseEntity<Reserva>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/reservas/{sala}+{data}", method = RequestMethod.POST)
+	@RequestMapping(value = "/reservas/adicionar/{sala}+{data}", method = RequestMethod.POST)
 	public ResponseEntity<Reserva> add(Reserva reserva){
 		
 		reserva.setStatus(StatusReserva.PENDENTE);
@@ -63,7 +63,7 @@ public class ReservaRestController {
 		return new ResponseEntity<>(HttpStatus.OK); 
 	}
 	
-	@RequestMapping(value = "/reservas/update/{id}+{sala}+{data}+{status}", method = RequestMethod.POST)
+	@RequestMapping(value = "/reservas/{id}/atualizar/{sala}+{data}+{status}", method = RequestMethod.PUT)
 	public ResponseEntity<Reserva> update(@PathVariable("id") Long id, Reserva reserva){
 		
 		if(reservaRepository.existsById(id) == false) {
@@ -75,7 +75,7 @@ public class ReservaRestController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/reservas/{id}/to/{usuarioId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/reservas/{id}/usuario/{usuarioId}", method = RequestMethod.PUT)
 	public ResponseEntity<Reserva> asign(@PathVariable("id") Long id, @PathVariable("usuarioId") Long usuarioId){
 		
 		if(reservaRepository.existsById(id) == false || usuarioRepository.existsById(usuarioId) == false) {
@@ -89,11 +89,5 @@ public class ReservaRestController {
 		
 		reservaRepository.save(reserva.get());
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/reservas/usuario/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<Reserva>> getByUser(@PathVariable("id") Long id){
-		
-		return new ResponseEntity<List<Reserva>>(reservaRepository.byUserId(id), HttpStatus.OK);
 	}
 }

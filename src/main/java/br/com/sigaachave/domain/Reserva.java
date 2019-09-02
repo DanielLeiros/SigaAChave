@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.sigaachave.enums.StatusReserva;
@@ -29,6 +30,7 @@ public class Reserva {
 	
 	@ManyToOne
 	@JoinColumn(name="usuario_id")
+	@JsonIgnore
 	private Usuario usuario;
 	
 	public long getId() {

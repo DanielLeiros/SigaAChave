@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.sigaachave.domain.Reserva;
 import br.com.sigaachave.domain.Usuario;
+import br.com.sigaachave.repository.ReservaRepository;
 import br.com.sigaachave.repository.UsuarioRepository;
 
 @RestController
@@ -19,6 +21,9 @@ public class UsuarioRestController {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private ReservaRepository reservaRepository;
 	
 	@RequestMapping(value = "/usuarios", method = RequestMethod.GET)
 	public ResponseEntity<List<Usuario>> all() {
@@ -36,7 +41,7 @@ public class UsuarioRestController {
 		return new ResponseEntity<Usuario>(usuarioRepository.getOne(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/usuarios/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/usuarios/{id}/excluir", method = RequestMethod.DELETE)
 	public ResponseEntity<Usuario> remove(@PathVariable("id") Long id) {
 		
 		if(usuarioRepository.existsById(id) == false) {
@@ -48,14 +53,14 @@ public class UsuarioRestController {
 		return new ResponseEntity<Usuario>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/usuarios/{nome}+{senha}+{papel}", method = RequestMethod.POST)
+	@RequestMapping(value = "/usuarios/adicionar/{nome}+{senha}+{papel}", method = RequestMethod.POST)
 	public ResponseEntity<Usuario> add(Usuario usuario){
 		
 		usuarioRepository.save(usuario);
 		return new ResponseEntity<>(HttpStatus.OK); 
 	}
 	
-	@RequestMapping(value = "/usuarios/update/{id}+{nome}+{senha}+{papel}", method = RequestMethod.POST)
+	@RequestMapping(value = "/usuarios/{id}/atualizar/{nome}+{senha}+{papel}", method = RequestMethod.PUT)
 	public ResponseEntity<Usuario> update(@PathVariable("id") Long id, Usuario usuario){
 		
 		if(usuarioRepository.existsById(id) == false) {
@@ -65,5 +70,11 @@ public class UsuarioRestController {
 		
 		usuarioRepository.save(usuario);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/usuarios/{id}/reservas", method = RequestMethod.GET)
+	public ResponseEntity<List<Reserva>> getByUser(@PathVariable("id") Long id){
+		
+		return new ResponseEntity<List<Reserva>>(reservaRepository.byUserId(id), HttpStatus.OK);
 	}
 }
